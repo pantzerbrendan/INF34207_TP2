@@ -14,8 +14,16 @@ int main(int ac, char **av, char **env)
 {
     Parameters params(ac, av, env);
 
-    std::cout << params.values(1) << std::endl;
-    if (params.count() == 2 && params.values(1) == "--help")
+    if (params.count() == 2)
+    {
+        if (params.values(1) == "--help")
+            help();
+        else
+            help();
+    }
+    else if (params.count() == 3)
+        help();
+    else
         help();
     // if (ac == 2 && std::string(av[1]) == "--help")
     //     help_fct();

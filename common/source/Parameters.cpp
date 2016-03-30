@@ -23,7 +23,8 @@ const std::string   Parameters::values(const int index) const
 {
     if (index >= this->_argcount) return (std::string());
 
-    s_list::const_iterator it;
-    for (it = this->_argvalues.begin(); it != this->_argvalues.end(); it++);
+    s_list::const_iterator it = this->_argvalues.begin();
+    for (int idx = 0; idx < index && it != this->_argvalues.end(); idx++)
+      it++;
     return (*(it));
 }
