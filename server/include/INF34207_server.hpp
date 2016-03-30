@@ -1,0 +1,7 @@
+
+#ifndef INF34207_SERVER_HPP_
+# define INF34207_SERVER_HPP_
+
+
+
+#endif /* !INF34207_SERVER_HPP_ */
