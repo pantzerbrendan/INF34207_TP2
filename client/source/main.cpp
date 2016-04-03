@@ -19,14 +19,12 @@ int main(int ac, char **av, char **env)
         if (params.values(1) == "--help")
             help();
         else
-            help();
+            help(); // erreur
     }
     else if (params.count() == 3)
-        help();
+        help();//client(params);
     else
-        help();
-    // if (ac == 2 && std::string(av[1]) == "--help")
-    //     help_fct();
+        help(); // erreur
 
     return (EXIT_SUCCESS);
 }
