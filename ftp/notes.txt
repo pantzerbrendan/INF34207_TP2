@@ -1,0 +1,31 @@
+recuperer le protocol (TCP)
+creer la socket ==> fd
+initialiser une structure sockaddr_in ==> serv_sockaddr
+bind fd avec serv_sockaddr
+listen d'une certaine taille sur le fd
+accpeter un client
+communiquer avec le client
+
+classe client
+    - int fd
+    - char *ip_addr
+    - struct sockaddr_in s_in_client
+    - socklen_t s_in_size
+
+    * client::client(ip_addr, fd, s_in_client)
+
+classe socket
+    - int fd
+    - struct sockaddr_in s_in
+    - struct protoent *pe
+    - int port
+    - std::vector<client *>
+
+    * socket::socket()
+    * socket::socket(int port)
+    * socket::~socket()
+    * socket::open() // throw # no params
+    * socket::bind() // throw # no params
+    * socket::listen() // throw # no params
+    * socket::accept() // throw # no params
+    * socket::close() // throw # no params
