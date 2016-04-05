@@ -1,24 +1,28 @@
 
 #include <iostream>
-#include "socket.hpp"
+#include <unistd.h>
+#include "Socket.hpp"
 
-networking::socket::socket(const int port = constants::DEFAULT_PORT, const std::string &protocol = constants::DEFAULT_PROTOCOL)
-    : _port(port), _status(INITIAL), _protocol_name(protocol)
+networking::Socket::Socket() : _port(constants::DEFAULT_PORT), _status(INITIAL), _protocol_name(constants::DEFAULT_PROTOCOL), _running(false)
+{}
+
+networking::Socket::Socket(int port, const std::string &protocol)
+    : _port(port), _status(INITIAL), _protocol_name(protocol), _running(false)
 {
 }
 
-networking::socket::~socket()
+networking::Socket::~Socket()
 {
     try {
-        this->close();
+        this->Close();
     } catch (network_exception ex) {
         std::cerr << ex << std::endl;
     }
 }
 
-void    networking::socket::open()
+void    networking::Socket::Open()
 {
-    this->_protocol = getprotobyname(this->_protocol_name);
+    this->_protocol = getprotobyname(this->_protocol_name.c_str());
     if (!this->_protocol)
     {
         this->_status = NOT_OPEN;
@@ -26,7 +30,7 @@ void    networking::socket::open()
     }
 
     this->_socket_fd = socket(AF_INET, SOCK_STREAM, this->_protocol->p_proto);
-    if (this->_socket_fd = -1)
+    if (this->_socket_fd == -1)
     {
         this->_status = NOT_OPEN;
         throw network_exception("Impossible de créer une socket");
@@ -36,41 +40,44 @@ void    networking::socket::open()
     this->_s_in.sin_port = htons(this->_port);
     this->_s_in.sin_addr.s_addr = INADDR_ANY;
     this->_status = OPEN_OK;
+    this->_running = true;
 }
 
-void    networking::socket::bind()
+void    networking::Socket::Bind()
 {
     if (bind(this->_socket_fd, (const struct sockaddr *)&(this->_s_in), sizeof(this->_s_in)) == -1)
     {
         network_exception *except = NULL;
         try {
-            this->close();
+            this->Close();
         } catch (network_exception ex) {
             except = &ex;
         }
         this->_status = NOT_BIND;
-        throw except == NULL ? network_exception("Impossible de binder la socket") : except; // man bind
+        if (except == NULL) throw network_exception("Impossible de bind la socket");
+        else throw except;
     }
     this->_status = BIND_OK;
 }
 
-void    networking::socket::listen()
+void    networking::Socket::Listen()
 {
-    if (listen(this->_socket_fd, MAX_CLIENTS) == -1)
+    if (listen(this->_socket_fd, constants::MAX_CLIENTS) == -1)
     {
         network_exception *except = NULL;
         try {
-            this->close();
+            this->Close();
         } catch (network_exception ex) {
             except = &ex;
         }
         this->_status = NOT_LISTEN;
-        throw except == NULL ? network_exception("Impossible de listen sur la socket") : except; // man bind
+        if (except == NULL) throw network_exception("Impossible de listen sur la socket");
+        else throw except;
     }
     this->_status = LISTEN_OK;
 }
 
-networking::client  *networking::socket::accept()
+networking::Client  *networking::Socket::Accept()
 {
     struct sockaddr_in s_client;
     socklen_t   s_client_size = sizeof(s_client);
@@ -80,12 +87,14 @@ networking::client  *networking::socket::accept()
         this->_status = NOT_ACCEPT;
         throw network_exception("Erreur lors de la connexion du client");
     }
-    this->_clients.push_back(new networking::client(inet_ntoa(s_client.sin_addr, fd, s_client)));
+    networking::Client *cl = new networking::Client(inet_ntoa(s_client.sin_addr), client_fd, s_client);
+    this->_clients.push_back(cl);
+    //this->_clients.push_back(new networking::client(inet_ntoa(s_client.sin_addr), client_fd, s_client));
     this->_status = ACCEPT_OK;
-    return (client);
+    return (cl);
 }
 
-void    networking::socket::close()
+void    networking::Socket::Close()
 {
     for (int i = 0; i < this->_clients.size(); i++)
     {
@@ -100,17 +109,24 @@ void    networking::socket::close()
         this->_status = NOT_CLOSE;
         throw network_exception("Erreur lors de la fermeture de la socket");
     }
+    this->_running = false;
 }
 
-static socket *networking::socket::create_socket(const int port, const std::string &protocol_name)
+int     networking::Socket::get_socket_fd() const { return (this->_socket_fd); }
+int     networking::Socket::get_port() const { return (this->_port); }
+bool    networking::Socket::is_open() const {  }
+
+/*
+static networking::Socket *networking::Socket::create_socket(const int port, const std::string &protocol_name)
 {
-    socket sock = new socket(port, protocol_name);
+    Socket *sock = new Socket(port, protocol_name);
     try {
-        sock->open();
-        sock->bind();
-        sock->listen();
+        sock->Open();
+        sock->Bind();
+        sock->Listen();
     } catch (network_exception ex) {
         return (NULL);
     }
     return (sock);
 }
+*/

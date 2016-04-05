@@ -6,8 +6,8 @@
 #include <string>
 #include <cerrno>
 
-# define exception(msg)         exception(msg, __FILE__, __FUNCTION__, __LINE__)
-# define pretty_exception(msg)  exception(msg, __FILE__, __PRETTY_FUNCTION__, __LINE__)
+// # define exception(msg)         exception(msg, __FILE__, __FUNCTION__, __LINE__)
+// # define pretty_exception(msg)  exception(msg, __FILE__, __PRETTY_FUNCTION__, __LINE__)
 
 class exception : public std::exception
 {
@@ -20,6 +20,7 @@ protected:
     std::string     _detailed_error_message; // = strerror(errno)
 
 public:
+    exception(const std::string &);
     exception(const std::string &, const std::string &, const std::string &, const int); // message, file, function, line
     ~exception() throw();
 
