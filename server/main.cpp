@@ -31,7 +31,7 @@ int main(int ac, char **av)
 			std::cout << c->get_ip_address() << " connected" << std::endl;
 			client_handle(c);
 		} catch(network_exception ex) {
-			std::cerr << ex.what() << std::endl
+			std::cerr << ex.what() << std::endl;
 		}
 	}
 
