@@ -143,6 +143,7 @@ public class MainFrame extends javax.swing.JFrame {
                 Socket sock = new Socket(this.ipAddressField.getText(), port);
                 FileFrame frame = new FileFrame(sock);
                 this.dispose();
+                frame.setVisible(true);
             } catch (IOException ex) {
                 this.errorLabel.setVisible(true);
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
