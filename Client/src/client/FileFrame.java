@@ -163,9 +163,11 @@ public class FileFrame extends javax.swing.JFrame {
                     line = br.readLine();
                 }
                 String content = sb.toString();
+                System.out.println("fichier lu");
                 PrintWriter wr = new PrintWriter(this.socket.getOutputStream());
                 wr.print("FILE_NAME = " + filename);
                 wr.print(content);
+                wr.flush();
             } catch (Exception ex) {
                 Logger.getLogger(FileFrame.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
