@@ -96,7 +96,7 @@ networking::Client  *networking::Socket::Accept()
 
 void    networking::Socket::Close()
 {
-    for (int i = 0; i < this->_clients.size(); i++)
+    for (uint i = 0; i < this->_clients.size(); i++)
     {
         if (close(this->_socket_fd) == -1)
             std::cerr << "Erreur lors de la deconnexion du client : " << this->_clients[i]->get_ip_address() << std::endl;
@@ -114,19 +114,4 @@ void    networking::Socket::Close()
 
 int     networking::Socket::get_socket_fd() const { return (this->_socket_fd); }
 int     networking::Socket::get_port() const { return (this->_port); }
-bool    networking::Socket::is_open() const {  }
-
-/*
-static networking::Socket *networking::Socket::create_socket(const int port, const std::string &protocol_name)
-{
-    Socket *sock = new Socket(port, protocol_name);
-    try {
-        sock->Open();
-        sock->Bind();
-        sock->Listen();
-    } catch (network_exception ex) {
-        return (NULL);
-    }
-    return (sock);
-}
-*/
+bool    networking::Socket::is_open() const { return (this->_running); } // a changer

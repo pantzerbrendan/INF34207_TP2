@@ -1,7 +1,0 @@
-
-#ifndef INF34207_CLIENT_HPP_
-# define INF34207_CLIENT_HPP_
-
-
-
-#endif /* !INF34207_CLIENT_HPP_ */
