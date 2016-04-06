@@ -23,6 +23,7 @@ int main(int ac, char **av)
 	}
 
 	g_socket_fd = s.get_socket_fd();
+	std::cout << "Le port est : " << s.get_port() << std::endl;
 	while (s.is_open())
 	{
 		try

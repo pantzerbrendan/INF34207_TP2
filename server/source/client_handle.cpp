@@ -76,7 +76,7 @@ void		client_process(networking::Client *c)
 				}
 				else
 				{
-						read_str = read_str.substr(0, read_str.size() - 1); // supprime le \n a la fin de la chaine
+						read_str = read_str.substr(0, read_str.size()); // supprime le \n a la fin de la chaine
 						if (read_str.find("FILE_NAME = ") == 0)
 						{
 							filename = constants::FILES_PATH + read_str.substr(12);
